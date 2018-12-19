@@ -1,3 +1,5 @@
+package votingsystem;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,7 +21,7 @@ public class Db {
         return false;
     }
 
-    public void insertElection(String name, String type, String detail, boolean status, int result) throws SQLException{
+    public void insertElection(String name, String type, String detail, boolean status, String result) throws SQLException{
         //status == true > open else closed
         
     }
@@ -27,19 +29,19 @@ public class Db {
         return false;
 
     }
-    public int readResult(){
-        return 0;
+    public String readResult(){
+        return null;
 
     }
-    public void updateStatus(){
+    public void updateStatus(boolean status){
 
     }
-    public void updateResult(){
+    public void updateResult(String result){
 
     }
 
 
-    public void insertCompetitor(String name, String type, String detail, int count) throws SQLException{
+    public void insertCompetitor(String name, int age, String job, String detail, int count) throws SQLException{
     }
     public int readCount(){
         return 0;
