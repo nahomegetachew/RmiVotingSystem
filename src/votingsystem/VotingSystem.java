@@ -6,23 +6,15 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class VotingSystem extends UnicastRemoteObject implements AuthInterface,
-                                    ElectionInterface, CompetitorsInterface{
+public class VotingSystem extends UnicastRemoteObject implements VotingInterface{
     Db db;
-    boolean status; // for creating new election (open)
-    String result;  // for creating new election (null)
-    int count; //intial count for compittiors
+    
     
     
     
     public VotingSystem() throws RemoteException{
         super();
         db = new Db();
-        status = true;
-        result = null;
-        count = 0;
-        
-        
     }
 
     @Override
@@ -54,7 +46,7 @@ public class VotingSystem extends UnicastRemoteObject implements AuthInterface,
     @Override
     public void createElection(String name, String type, String detail) throws RemoteException {
         try {
-            db.insertElection(name,type,detail,status, result);
+            db.insertElection(name,type,detail,1, null);
         } catch (SQLException ex) {
             Logger.getLogger(VotingSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -62,7 +54,7 @@ public class VotingSystem extends UnicastRemoteObject implements AuthInterface,
     }
 
     @Override
-    public boolean getStatus() throws RemoteException {
+    public int getStatus() throws RemoteException {
         return db.readStatus();
        
     }
@@ -74,7 +66,7 @@ public class VotingSystem extends UnicastRemoteObject implements AuthInterface,
     }
 
     @Override
-    public void setStatus(boolean status) throws RemoteException {
+    public void setStatus(int status) throws RemoteException {
         db.updateStatus(status);
         
         
@@ -88,23 +80,24 @@ public class VotingSystem extends UnicastRemoteObject implements AuthInterface,
     }
 
     @Override
-    public void createCompetitor(String name, int age, String job, String detail) throws RemoteException {
+    public void createCompetitor(String name, int age, String job, String detail, int election_id) throws RemoteException {
         try {
-            db.insertCompetitor(name, age,job, detail, count);
+            db.insertCompetitor(name, age,job, detail, 0, election_id);
         } catch (SQLException ex) {
             Logger.getLogger(VotingSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
-    public void IncCount() throws RemoteException {
-        db.updateCount();
+    public void IncCount(int competitor_id, int count) throws RemoteException {
+        int c = count + 1; // increament count by 1
+        db.updateCount(competitor_id, c);
        
     }
 
     @Override
-    public int getCount() throws RemoteException {
-        return db.readCount();
+    public int getCount(int competitor_id) throws RemoteException {
+        return db.readCount(competitor_id);
         
     }
 
